@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 animate__animated animate__fadeIn">
+    <!-- Mahsulotlar filtrlari -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" id="productSearch" placeholder="Mahsulot qidirish...">
+                <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <select class="form-select" id="sortProducts">
+                <option value="">Saralash</option>
+                <option value="price_asc">Narx (past → yuqori)</option>
+                <option value="price_desc">Narx (yuqori → past)</option>
+                <option value="name_asc">Nomi (A-Z)</option>
+                <option value="name_desc">Nomi (Z-A)</option>
+                <option value="newest">Yangi mahsulotlar</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Mahsulotlar katakchasi -->
+    <div class="text-center mb-4">
+        <button class="btn btn-primary btn-lg glow-on-hover" type="button" id="toggleProducts">
+            <i class="fas fa-boxes me-2"></i> Mahsulotlar
+            <span class="badge bg-secondary ms-2">{{ products|length }}</span>
+        </button>
+    </div>
+
+    <!-- Mahsulotlar ro'yxati -->
+    <div class="row" id="productsContainer">
+        {% for product in products %}
+        <div class="col-lg-4 col-md-6 mb-4 product-card" 
+             data-price="{{ product.price }}" 
+             data-name="{{ product.title|lower }}" 
+             data-date="{{ product.created_at|date:'Y-m-d' }}">
+            <div class="card h-100 modern-card">
+                <div class="position-relative">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}" 
+                         style="height: 200px; object-fit: cover;">
+                    {% if product.is_new %}
+                    <span class="position-absolute top-0 start-0 bg-success text-white px-2 py-1 m-2 rounded">
+                        <i class="fas fa-certificate me-1"></i> Yangi
+                    </span>
+                    {% endif %}
+                    {% if product.discount %}
+                    <span class="position-absolute top-0 end-0 bg-danger text-white px-2 py-1 m-2 rounded">
+                        -{{ product.discount }}%
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text text-muted">{{ product.description|truncatewords:15 }}</p>
+                    
+                    <div class="mt-auto">
+                        {% if product.discount %}
+                        <div class="d-flex align-items-center">
+                            <h5 class="text-danger mb-0">{{ product.get_discounted_price }} so'm</h5>
+                            <small class="text-decoration-line-through text-muted ms-2">{{ product.price }} so'm</small>
+                        </div>
+                        {% else %}
+                        <h5 class="text-primary mb-0">{{ product.price }} so'm</h5>
+                        {% endif %}
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'products:product_detail' product.id %}" 
+                               class="btn btn-sm btn-outline-primary flex-grow-1 me-2">
+                                <i class="fas fa-info-circle me-1"></i> Batafsil
+                            </a>
+                            <button class="btn btn-sm btn-success add-to-cart" data-product-id="{{ product.id }}">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle fa-2x mb-3"></i>
+                <h4>Hozircha mahsulotlar mavjud emas</h4>
+                <p class="mb-0">Tez orada yangi mahsulotlar qo'shiladi</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="text-center my-5" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Yuklanmoqda...</span>
+    </div>
+    <p class="mt-2">Mahsulotlar yuklanmoqda...</p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle products visibility
+    const toggleBtn = document.getElementById('toggleProducts');
+    const productsContainer = document.getElementById('productsContainer');
+    
+    toggleBtn.addEventListener('click', function() {
+        productsContainer.classList.toggle('d-none');
+        const icon = this.querySelector('i');
+        if (productsContainer.classList.contains('d-none')) {
+            icon.classList.replace('fa-boxes', 'fa-eye-slash');
+        } else {
+            icon.classList.replace('fa-eye-slash', 'fa-boxes');
+        }
+    });
+
+    // Product search functionality
+    const searchInput = document.getElementById('productSearch');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const productCards = document.querySelectorAll('.product-card');
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        let visibleCount = 0;
+        
+        productCards.forEach(card => {
+            const productName = card.dataset.name;
+            if (productName.includes(searchTerm)) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show message if no products found
+        if (visibleCount === 0 && searchTerm.length > 0) {
+            productsContainer.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <h4>"${searchTerm}" bo'yicha mahsulot topilmadi</h4>
+                        <p class="mb-0">Boshqa kalit so'zlar bilan qayta urunib ko'ring</p>
+                    </div>
+                </div>
+            `;
+        } else if (searchTerm.length === 0) {
+            // Agar qidiruv bo'sh bo'lsa, barcha kartochkalarni ko'rsatish
+            productCards.forEach(card => {
+                card.style.display = '';
+            });
+        }
+    });
+    
+    clearSearchBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+    });
+
+    // Product sorting
+    const sortSelect = document.getElementById('sortProducts');
+    sortSelect.addEventListener('change', function() {
+        const sortValue = this.value;
+        const container = document.getElementById('productsContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        // Show loading spinner
+        container.style.display = 'none';
+        loadingSpinner.style.display = 'block';
+        
+        // Simulate AJAX call (replace with actual fetch in production)
+        setTimeout(() => {
+            // Hide spinner and show container
+            loadingSpinner.style.display = 'none';
+            container.style.display = 'flex'; // yoki 'block', kerakli display turiga qarab
+            
+            // Bu yerda sorting logikasini qo'llash kerak
+            // Hozirgi kodingizda sorting ishlamayapti, shu sababli front-end sortingni qo'shishingiz mumkin
+            // Agar sorting backendda bo'lsa, bu yerda fetch bilan so'rov yuboring
+            
+            // Sortingni front-endda amalga oshirish (faqat misol uchun):
+            const cardsArray = Array.from(productCards);
+            cardsArray.sort((a, b) => {
+                if (sortValue === 'price_asc') {
+                    return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                } else if (sortValue === 'price_desc') {
+                    return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                } else if (sortValue === 'name_asc') {
+                    return a.dataset.name.localeCompare(b.dataset.name);
+                } else if (sortValue === 'name_desc') {
+                    return b.dataset.name.localeCompare(a.dataset.name);
+                } else if (sortValue === 'newest') {
+                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                }
+                return 0;
+            });
+            
+            cardsArray.forEach(card => container.appendChild(card));
+        }, 700);
+    });
+
+    // Add to cart handler with correct URL
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+
+            fetch("{% url 'cart:add_to_cart' 0 %}".replace('0', productId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    product_id: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Mahsulot savatga qo'shildi!");
+                    // Yoki yangilash uchun sahifani qayta yuklash yoki savatni yangilash kodi
+                } else {
+                    alert("Xatolik yuz berdi: " + (data.error || "Noma'lum xatolik"));
+                }
+            })
+            .catch(error => {
+                alert("So'rovda xatolik: " + error);
+            });
+        });
+    });
+});
+</script>
+
+<style>
+/* Qo'shimcha zamonaviy uslublar */
+.modern-card {
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+.glow-on-hover {
+    transition: box-shadow 0.3s ease-in-out;
+}
+.glow-on-hover:hover {
+    box-shadow: 0 0 15px #0d6efd;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Online do'kon - eng yaxshi mahsulotlar bir joyda">
+  <title>GadgetPro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary-light: #4a6bff;
+      --primary-dark: #7f95ff;
+      --secondary-light: #6c757d;
+      --secondary-dark: #495057;
+      --success-light: #28a745;
+      --success-dark: #218838;
+      --danger-light: #dc3545;
+      --danger-dark: #c82333;
+      --warning-light: #ffc107;
+      --warning-dark: #e0a800;
+      --info-light: #17a2b8;
+      --info-dark: #138496;
+      
+      --transition-time: 0.4s;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+      
+      --border-radius-sm: 8px;
+      --border-radius-md: 12px;
+      --border-radius-lg: 16px;
+      
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --text-muted: #6c757d;
+      --nav-bg: linear-gradient(135deg, #343a40 0%, #495057 100%);
+      --card-bg: #ffffff;
+      --card-hover: #f1f1f1;
+      --btn-hover: #343a40;
+      --btn-text: #f8f9fa;
+      --btn-outline: #343a40;
+      --btn-warning: var(--warning-light);
+      --input-bg: #ffffff;
+      --input-border: #ced4da;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --text-muted: #9e9e9e;
+      --nav-bg: linear-gradient(135deg, #222 0%, #333 100%);
+      --card-bg: #1e1e1e;
+      --card-hover: #2a2a2a;
+      --btn-hover: #e0e0e0;
+      --btn-text: #121212;
+      --btn-outline: #e0e0e0;
+      --btn-warning: var(--warning-dark);
+      --input-bg: #2d2d2d;
+      --input-border: #444;
+    }
+
+    html, body {
+      transition: all var(--transition-time) cubic-bezier(0.4, 0, 0.2, 1);
+      min-height: 100vh;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary-light);
+      text-decoration: none;
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--primary-dark);
+      opacity: 0.9;
+    }
+
+    .navbar {
+      background: var(--nav-bg) !important;
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-sm) 0;
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand i {
+      margin-right: var(--spacing-sm);
+      font-size: 1.2em;
+    }
+
+    .btn {
+      border-radius: var(--border-radius-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-weight: 500;
+      transition: all var(--transition-time) ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+    }
+
+    .btn i {
+      font-size: 1em;
+    }
+
+    .btn-outline-light {
+      color: var(--btn-outline);
+      border-color: var(--btn-outline);
+      background: transparent;
+    }
+
+    .btn-outline-light:hover {
+      background-color: var(--btn-outline);
+      color: var(--btn-text);
+    }
+
+    .btn-warning {
+      background-color: var(--btn-warning);
+      border-color: var(--btn-warning);
+      color: var(--btn-text);
+    }
+
+    .btn-warning:hover {
+      background-color: var(--warning-dark);
+      border-color: var(--warning-dark);
+    }
+
+    #theme-toggle {
+      background: transparent;
+      border: 2px solid currentColor;
+      border-radius: 30px;
+      width: 60px;
+      height: 32px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      margin-left: var(--spacing-md);
+    }
+
+    #theme-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    #theme-toggle i {
+      font-size: 18px;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    #theme-toggle .fa-sun {
+      color: #ffd700;
+      transform: translateX(0);
+    }
+
+    #theme-toggle .fa-moon {
+      color: #e0e0e0;
+      transform: translateX(30px);
+    }
+
+    [data-theme="dark"] #theme-toggle .fa-sun {
+      transform: translateX(-30px);
+    }
+
+    [data-theme="dark"] #theme-toggle .fa-moon {
+      transform: translateX(0);
+    }
+
+    .animate-pop {
+      animation: pop 0.3s ease-out;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .fab {
+      position: fixed;
+      bottom: var(--spacing-xl);
+      right: var(--spacing-xl);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+    }
+
+    .fab.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .fab:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      background: var(--primary-dark);
+    }
+
+    .glow-on-hover {
+      transition: all 0.3s ease;
+    }
+
+    .glow-on-hover:hover {
+      box-shadow: 0 0 15px rgba(74, 107, 255, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .modern-card {
+      border: none;
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      transition: all var(--transition-time) ease;
+      background: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .modern-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      background: var(--card-hover);
+    }
+
+    .container {
+      transition: all var(--transition-time) ease;
+      max-width: 1200px;
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .badge {
+      font-weight: 500;
+      padding: 4px 8px;
+    }
+
+    .dropdown-menu {
+      border-radius: var(--border-radius-sm);
+      box-shadow: var(--shadow-md);
+      border: none;
+      background-color: var(--card-bg);
+    }
+
+    .dropdown-item {
+      color: var(--text-color);
+      padding: var(--spacing-sm) var(--spacing-md);
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--primary-light);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-brand {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      
+      #theme-toggle {
+        width: 50px;
+        height: 28px;
+        margin-left: var(--spacing-sm);
+      }
+      
+      .fab {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+        bottom: var(--spacing-lg);
+        right: var(--spacing-lg);
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-spinner {
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 3px solid var(--primary-light);
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand animate__animated animate__fadeIn" href="/">
+        <i class="fas fa-store"></i>
+        <span class="ms-2">GadgetPro</span>
+      </a>
+
+      <div class="d-flex align-items-center">
+        <a href="{% url 'cart:view_cart' %}" class="btn btn-warning ms-3 glow-on-hover position-relative" id="cart-btn">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
+            0
+          </span>
+        </a>
+
+        <button id="theme-toggle" aria-label="Tema almashtirish" title="Tema almashtirish" class="animate__animated animate__fadeIn">
+          <i class="fas fa-sun"></i>
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <div class="ms-3 animate__animated animate__fadeIn">
+          {% if user.is_authenticated %}
+            <div class="dropdown">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle me-1"></i>
+                <span>{{ user.username }}</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Sozlamalar</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-history me-2"></i>Buyurtmalar tarixi</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item text-danger" onclick="return confirmLogout()">
+                      <i class="fas fa-sign-out-alt me-2"></i>Chiqish
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-light me-2 glow-on-hover">
+              <i class="fas fa-sign-in-alt me-1"></i>
+              <span>Kirish</span>
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-success glow-on-hover">
+              <i class="fas fa-user-plus me-1"></i>
+              <span>Ro'yxatdan o'tish</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4 animate__animated animate__fadeIn">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <button class="fab" title="Yuqoriga chiqish" aria-label="Yuqoriga chiqish">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const htmlElement = document.documentElement;
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      
+      htmlElement.setAttribute('data-theme', savedTheme);
+      
+      toggleBtn.addEventListener('click', function() {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        this.classList.add('animate-pop');
+        setTimeout(() => this.classList.remove('animate-pop'), 300);
+      });
+
+      const fab = document.querySelector('.fab');
+      
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          fab.classList.add('visible');
+        } else {
+          fab.classList.remove('visible');
+        }
+      });
+      
+      fab.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      window.confirmLogout = function() {
+        return confirm('Siz haqiqatan ham hisobdan chiqmoqchimisiz?');
+      };
+
+      setTimeout(() => {
+        document.getElementById('cart-count').textContent = '3';
+        document.getElementById('cart-btn').classList.add('animate__animated', 'animate__headShake');
+        
+        setTimeout(() => {
+          document.getElementById('cart-btn').classList.remove('animate__animated', 'animate__headShake');
+        }, 1000);
+      }, 2000);
+
+      document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (this.getAttribute('href') && !this.getAttribute('href').startsWith('#')) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

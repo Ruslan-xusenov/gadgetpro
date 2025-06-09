@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 col-md-6">
+  <h3>Ro‘yxatdan o‘tish</h3>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Yuborish</button>
+  </form>
+</div>
+{% endblock %}
