@@ -1,2 +1,2 @@
 GadgetPro magzini uchun online sayt
-Dveloper Xusrnov Ruslan
+Dveloper Xusenov Ruslan
